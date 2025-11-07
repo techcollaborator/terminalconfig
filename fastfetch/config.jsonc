@@ -1,7 +1,29 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "type": "none"
+    "type": "auto",
+    "source": "%USERPROFILE%\\.config\\fastfetch\\custom_ascii_art.txt.txt",
+    "padding": {
+      "top": 0,
+      "right": 0,
+      "bottom": 0,
+      "left": 0
+    },
+  },
+  "general": {},
+  "display": {
+    "brightColor": "true",
+    "separator": "",
+    "constants": [
+      "\u001b[77C",  // $1: Move cursor forward 77 columns (adjust if needed)
+      "\u001b[77D",  // $2: Move cursor back 77 columns (not used, defined anyway)
+      "\u001b[88C",  // $3: Move cursor to max width (wide term), or last column (narrow term)
+      "\u001b[20D",  // $4: Move back 20 columns for the color block (both lines)
+      "───────────────────────────────────────────────────────────────────────────────────────"
+    ],
+    "key": {
+      "width": 14
+    },
   },
   "modules": [
     {
@@ -70,6 +92,13 @@
       "key": "\ue602 TERM \ue795 ",
       "keyColor": "38;2;183;175;224"
     },
+	{
+      "type": "processes",
+      "outputColor": "white",
+      "format": "",
+      "key": "\ue602 TASKS \uf085 ",
+      "keyColor": "38;2;183;175;224"
+    },
     {
       "type": "custom",
       "key": "\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc",
@@ -79,15 +108,15 @@
       "type": "cpu",
       "outputColor": "white",
       "format": "{1} - {5} core @ {7} - {8}",
-      "key": "\ue602 PROCS \uf4bc ",
+      "key": "\ue602 CPU \uf4bc ",
       "keyColor": "38;2;183;175;224",
       "temp": true
     },
     {
       "type": "gpu",
       "outputColor": "white",
-      "format": "{2} - {5} core @ {12} - {4} - {11}",
-      "key": "\ue602 GRAPH \udb80\ude97 ",
+      "format": "{2} - {5} core @ {12} - {4}",
+      "key": "\ue602 GPU \udb80\ude97 ",
       "keyColor": "38;2;183;175;224",
       "temp": true
     },
@@ -101,7 +130,7 @@
     {
       "type": "disk",
       "outputColor": "white",
-      "format": "{10} ({20}) - {1} / {2} ({3}) - {9}",
+      "format": "({20}) - {1} / {2} ({3}) - {9}",
       "key": "\ue602 DISKS \uf07b ",
       "keyColor": "38;2;183;175;224"
     },
@@ -118,43 +147,9 @@
       }
     },
     {
-      "type": "camera",
-      "outputColor": "white",
-      "format": "{1} - {5} x {6} px",
-      "key": "\ue602 CAMRA \uf030 ",
-      "keyColor": "38;2;183;175;224"
-    },
-    {
-      "type": "sound",
-      "outputColor": "white",
-      "format": "{2} - {3}",
-      "key": "\ue602 SOUND \uf028 ",
-      "keyColor": "38;2;183;175;224",
-      "percent": {
-        "type": ["num"]
-      }
-    },
-    {
-      "type": "custom",
-      "key": "\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc",
-      "keyColor": "white"
-    },
-    {
-      "type": "processes",
-      "outputColor": "white",
-      "format": "",
-      "key": "\ue602 TASKS \uf085 ",
-      "keyColor": "38;2;183;175;224"
-    },
-    {
-      "type": "custom",
-      "key": "\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc\ueacc",
-      "keyColor": "white"
-    },
-    {
       "type": "display",
       "outputColor": "white",
-      "format": "{22} x {23} px @ {24} Hz{?12} in {12}\" ({13} ppi){?} - {14} bit - HDR: {20} - {7}",
+      "format": "{22} x {23} px @ {24} Hz{?12} in {12}\" - {14} bit - HDR: {20} - {7}",
       "key": "\ue602 DISPY \udb80\udf79 ",
       "keyColor": "38;2;183;175;224"
     },

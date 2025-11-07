@@ -79,6 +79,61 @@ function Install-Configuration {
     }
 }
 
+function Install-AsciiArt {
+    param(
+        [string]$RepoRoot,
+        [string]$ConfigDir
+    )
+    
+    Write-ColorOutput "`nSetting up ASCII Art..." "Cyan"
+    
+    $AsciiArtSource = Join-Path $RepoRoot "fastfetch\custom_ascii_art.txt"
+    $AsciiArtTarget = Join-Path $ConfigDir "custom_ascii_art.txt"
+    
+    Write-ColorOutput "Source: $AsciiArtSource" "Gray"
+    Write-ColorOutput "Target: $AsciiArtTarget" "Gray"
+    
+    if (!(Test-Path $AsciiArtSource)) {
+        Write-ColorOutput "! ASCII art source file not found: $AsciiArtSource" "Yellow"
+        Write-ColorOutput "! Please ensure custom_ascii_art.txt exists in fastfetch folder" "Yellow"
+        return $false
+    }
+    
+    # Backup existing file if it exists
+    if ((Test-Path $AsciiArtTarget) -and $Backup) {
+        Backup-File $AsciiArtTarget
+    }
+    
+    # Remove existing file if force is enabled
+    if ((Test-Path $AsciiArtTarget) -and $Force) {
+        Remove-Item $AsciiArtTarget -Force -ErrorAction SilentlyContinue
+    }
+    
+    try {
+        if (!(Test-Path $AsciiArtTarget)) {
+            New-Item -ItemType SymbolicLink -Path $AsciiArtTarget -Target $AsciiArtSource -Force | Out-Null
+            Write-ColorOutput "✓ Created ASCII art symbolic link" "Green"
+        } else {
+            Copy-Item $AsciiArtSource $AsciiArtTarget -Force
+            Write-ColorOutput "✓ Copied ASCII art file (target already exists)" "Green"
+        }
+        return $true
+    }
+    catch {
+        Write-ColorOutput "! ASCII art symbolic link failed: $($_.Exception.Message)" "Yellow"
+        Write-ColorOutput "! Copying ASCII art file instead..." "Yellow"
+        try {
+            Copy-Item $AsciiArtSource $AsciiArtTarget -Force
+            Write-ColorOutput "✓ Copied ASCII art file" "Green"
+            return $true
+        }
+        catch {
+            Write-ColorOutput "✗ Failed to copy ASCII art: $($_.Exception.Message)" "Red"
+            return $false
+        }
+    }
+}
+
 # Main execution
 Write-ColorOutput "==========================================" "Cyan"
 Write-ColorOutput "    Terminal Configuration Setup" "Cyan"
@@ -124,11 +179,16 @@ $FastfetchLocations = @(
 )
 
 $FastfetchInstalled = $false
+$FastfetchConfigDir = $null
+
 foreach ($ConfigPath in $FastfetchLocations) {
     $ConfigDir = Split-Path $ConfigPath -Parent
     if (Test-Path $ConfigDir -or $Force) {
         $FastfetchInstalled = Install-Configuration -Source $FastfetchSource -Target $ConfigPath -Description "Fastfetch Configuration"
-        if ($FastfetchInstalled) { break }
+        if ($FastfetchInstalled) { 
+            $FastfetchConfigDir = $ConfigDir
+            break 
+        }
     }
 }
 
@@ -136,6 +196,17 @@ foreach ($ConfigPath in $FastfetchLocations) {
 if (!$FastfetchInstalled) {
     $DefaultConfigPath = $FastfetchLocations[0]
     $FastfetchInstalled = Install-Configuration -Source $FastfetchSource -Target $DefaultConfigPath -Description "Fastfetch Configuration"
+    if ($FastfetchInstalled) {
+        $FastfetchConfigDir = Split-Path $DefaultConfigPath -Parent
+    }
+}
+
+# 3. Setup ASCII Art for Fastfetch
+$AsciiArtInstalled = $false
+if ($FastfetchInstalled -and $FastfetchConfigDir) {
+    $AsciiArtInstalled = Install-AsciiArt -RepoRoot $RepoRoot -ConfigDir $FastfetchConfigDir
+} elseif ($FastfetchInstalled) {
+    Write-ColorOutput "! Could not determine Fastfetch config directory for ASCII art" "Yellow"
 }
 
 # Summary
@@ -153,6 +224,12 @@ if ($FastfetchInstalled) {
     Write-ColorOutput "✓ Fastfetch Configuration installed" "Green"
 } else {
     Write-ColorOutput "✗ Fastfetch Configuration installation failed" "Red"
+}
+
+if ($AsciiArtInstalled) {
+    Write-ColorOutput "✓ ASCII Art installed" "Green"
+} else {
+    Write-ColorOutput "✗ ASCII Art installation failed" "Red"
 }
 
 Write-ColorOutput "`nNext steps:" "Yellow"
